@@ -19,8 +19,8 @@ def cal_place_pairwise_dist(place_coordinates):
 def main():
     # try attention model
     train_matrix, test_set, place_coords = Foursquare().generate_data()
-    place_correlation = cal_place_pairwise_dist(place_coords)
-    scipy.sparse.save_npz('./data/Foursquare/place_correlation_gamma60.npz', place_correlation)
+    # place_correlation = cal_place_pairwise_dist(place_coords)
+    # scipy.sparse.save_npz('./data/mydata/pairwize/Vien_pairwize.npz', place_correlation)
 
 
 if __name__ == '__main__':

@@ -15,6 +15,7 @@ if torch.cuda.is_available():
 else:
     import torch as T
 
+city = "Buda"
 
 parser = ArgumentParser(description="SAE-NAD")
 parser.add_argument('-e', '--epoch', type=int, default=60, help='number of epochs for GAT')
@@ -49,7 +50,7 @@ def train_autoencoder(train_matrix, test_set):
     num_users, num_items = train_matrix.shape
     weight_matrix = log_surplus_confidence_matrix(train_matrix, alpha=args.alpha, epsilon=args.epsilon)
     train_matrix[train_matrix > 0] = 1.0
-    place_correlation = scipy.sparse.load_npz('./data/Foursquare/place_correlation_gamma60.npz')
+    place_correlation = scipy.sparse.load_npz('./data/mydata/pairwize/'+city+'_pairwize.npz')
 
     assert num_items == place_correlation.shape[0]
     print(train_matrix.shape)
