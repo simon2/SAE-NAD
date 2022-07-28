@@ -8,6 +8,15 @@ def precision_at_k_per_sample(actual, predicted, topk):
             num_hits += 1
     return num_hits / (topk + 0.0)
 
+def recall_at_k_per_sample(actual, predicted, topk):
+    num_hits = 0
+    for place in predicted:
+        if place in actual:
+            num_hits += 1
+    if len(set(actual)) == 0:
+        return 0.0
+    return num_hits / (len(set(actual)) + 0.0)
+
 
 def precision_at_k(actual, predicted, topk):
     sum_precision = 0.0

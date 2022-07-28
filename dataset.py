@@ -3,13 +3,13 @@ import scipy.sparse as sparse
 
 my_checkin_path = "./data/mydata/checkins/"
 my_coords_path = "./data/mydata/coords/"
-city = "Buda"
-persent = "0.2"
+city = "Kyoto"
+persent = "0.8"
 
 class Foursquare(object):
     def __init__(self):
-        self.user_num = 547
-        self.poi_num = 38
+        self.user_num = 783
+        self.poi_num = 1496
 
     def read_raw_data(self):
         directory_path = my_checkin_path
@@ -25,7 +25,7 @@ class Foursquare(object):
     
     def read_train_data(self):
         directory_path = my_checkin_path
-        checkin_file = city + '_' + persent + '_checkins_train.txt'
+        checkin_file = city + '_' + persent + '_checkins_train_2.txt'
         all_data = open(directory_path + checkin_file, 'r').readlines()
         sparse_train_matrix = sparse.dok_matrix((self.user_num, self.poi_num))
         for eachline in all_data:
@@ -37,7 +37,7 @@ class Foursquare(object):
     
     def read_test_set(self):
         directory_path = my_checkin_path
-        checkin_file = city + '_' + persent + '_checkins_test.txt'
+        checkin_file = city + '_' + persent + '_checkins_test_2.txt'
         all_data = open(directory_path + checkin_file, 'r').readlines()
         # sparse_train_matrix = sparse.dok_matrix((self.user_num, self.poi_num))
         test_place = []

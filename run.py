@@ -15,7 +15,9 @@ if torch.cuda.is_available():
 else:
     import torch as T
 
-city = "Buda"
+city = "Kyoto"
+persent = "0.8"
+poi_num = 1496
 
 parser = ArgumentParser(description="SAE-NAD")
 parser.add_argument('-e', '--epoch', type=int, default=60, help='number of epochs for GAT')
@@ -103,6 +105,13 @@ def train_autoencoder(train_matrix, test_set):
             place_correlation)[:, T.LongTensor(train_matrix.getrow(0).indices.astype(np.int32))])
         print(model([train_matrix.getrow(0).indices], place_correlation))
 
+    f = open("result/2/" + city + "_" + persent + ".txt", "w")
+    f.write("id,")
+    for i in range(0,poi_num):
+        if i == poi_num-1:
+            f.write("pre"+str(i+1)+",rec"+str(i+1)+"\n")
+        else:
+            f.write("pre"+str(i+1)+",rec"+str(i+1)+",")
     # Evaluation
     model.eval()
     topk = 20
@@ -122,6 +131,13 @@ def train_autoencoder(train_matrix, test_set):
         sorted_item = heapq.nlargest(topk, item_recommended_dict, key=item_recommended_dict.get)
         recommended_list.append(sorted_item)
 
+        f.write(str(user_id) + ",")
+        for i in range(0,poi_num):
+            if i == poi_num-1:
+                f.write(str(eval_metrics.precision_at_k_per_sample(test_set[user_id], sorted_item[:(i+1)], (i+1)))+ "," + str(eval_metrics.recall_at_k_per_sample(test_set[user_id], sorted_item[:(i+1)], (i+1)))+"\n")
+            else:
+                f.write(str(eval_metrics.precision_at_k_per_sample(test_set[user_id], sorted_item[:(i+1)], (i+1)))+ "," + str(eval_metrics.recall_at_k_per_sample(test_set[user_id], sorted_item[:(i+1)], (i+1)))+",")
+
         print(test_set[user_id], sorted_item[:topk])
         print(pred_rating_vector[sorted_item[0]], pred_rating_vector[sorted_item[1]],
               pred_rating_vector[sorted_item[2]], pred_rating_vector[sorted_item[3]],
@@ -129,6 +145,8 @@ def train_autoencoder(train_matrix, test_set):
         print("user:%d, precision@5:%f, precision@10:%f" % (
             user_id, eval_metrics.precision_at_k_per_sample(test_set[user_id], sorted_item[:5], 5),
             eval_metrics.precision_at_k_per_sample(test_set[user_id], sorted_item[:topk], topk)))
+
+    f.close()
 
     precision, recall, MAP = [], [], []
     for k in [5, 10, 15, 20]:
